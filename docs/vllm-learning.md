@@ -37,6 +37,14 @@ Automatic Prefix Caching（APC）进一步在请求间复用完全匹配的前�
 
 对应配置：`max_num_seqs`、`max_model_len`、`gpu_memory_utilization`；对应实验：相同模型、固定输入、并发 1/4/8。先学会区分“每秒完成多少请求”和“每个请求要等多久”，再考虑调参。
 
+## T4、AWQ 与本次配置
+
+本次候选使用单张 T4 16GB 和 `Qwen2.5-7B-Instruct-AWQ`。Qwen 官方 checkpoint 的 AWQ 配置为 4-bit、group size 128，计算 dtype 为 FP16。权重压缩后为 KV cache 和运行时留出更多空间，但是否支持目标上下文和并发，仍要看 vLLM 启动时报告的容量与真实请求结果。[官方模型配置](https://huggingface.co/Qwen/Qwen2.5-7B-Instruct-AWQ/blob/b25037543e9394b818fdfca67ab2a00ecc7dd641/config.json)
+
+区分三件事：AWQ 压缩模型权重；KV cache 保存本次推理的注意力状态；APC 让请求之间复用相同前缀的 KV。`--quantization awq` 不会自动把 KV cache 变成 4-bit，也不代表 APC 已开启。本项目保持相同的 AWQ 模型和计算精度，只在受控实验中切换 APC。
+
+T4 属于 Turing，不能直接套用 BF16 或要求 Ampere 的 FlashAttention 配置。当前候选显式选择 FP16、`TRITON_ATTN` 与 eager 执行；这些参数也必须交给任务三、四统一，不能只看模型名相同就合并结果。eager 是本次试跑的执行方式，不代表它已经达到最佳性能。[vLLM 量化支持](https://docs.vllm.ai/en/stable/features/quantization/)、[attention backend 支持](https://docs.vllm.ai/en/v0.34.0/design/attention_backends/)
+
 ## 为什么主动场景适合研究前缀缓存
 
 任务一 prompt 只在尾部追加历史，旧的 system、观测和工具结果可以形成重复前缀。APC 命中时可省去相同前缀的部分 Prefill 工作。它主要节省输入处理，不会替模型生成后续输出。

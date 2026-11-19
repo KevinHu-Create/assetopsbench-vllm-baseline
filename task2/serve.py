@@ -28,6 +28,7 @@ def command(config: dict, port: int, profile_dir: Path | None) -> list[str]:
             "--gpu-memory-utilization", str(config["gpu_memory_utilization"]),
             "--max-num-seqs", str(config["max_num_seqs"]), "--seed", str(config["seed"]),
             "--generation-config", "vllm", "--enable-request-id-headers",
+            "--middleware", "task2.cache_control.CacheResetMiddleware",
             "--host", "127.0.0.1", "--port", str(port),
             "--enable-prefix-caching" if config["cache_mode"] == "on" else "--no-enable-prefix-caching"]
     args += ["--quantization", config["quantization"], "--attention-backend", config["attention_backend"]]
@@ -74,7 +75,7 @@ def main() -> None:
                 "profile_dir": str(args.profile_dir.resolve()) if args.profile_dir else None,
                 "base_url": f"http://127.0.0.1:{args.port}/v1"}
     write_json(args.out / "manifest.json", manifest)
-    env = dict(os.environ, VLLM_NO_USAGE_STATS="1")
+    env = dict(os.environ, VLLM_NO_USAGE_STATS="1", VLLM_SERVER_DEV_MODE="0")
     with (args.out / "server.log").open("w", encoding="utf-8") as log:
         child = subprocess.Popen(cmd, stdout=log, stderr=subprocess.STDOUT, env=env, start_new_session=True)
         manifest["pid"] = child.pid
