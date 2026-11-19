@@ -15,7 +15,7 @@ from .common import write_json
 
 def capture() -> dict:
     packages = {}
-    for name in ("vllm", "torch", "transformers", "tokenizers", "flashinfer-python"):
+    for name in ("vllm", "torch", "torchaudio", "torchvision", "transformers", "tokenizers", "flashinfer-python"):
         try:
             packages[name] = importlib.metadata.version(name)
         except importlib.metadata.PackageNotFoundError:

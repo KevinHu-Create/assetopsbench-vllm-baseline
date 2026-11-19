@@ -1,2 +1,8 @@
 # Pinned engine. The complete resolved package inventory is recorded per GPU run.
 vllm==0.34.0
+# Pin the PyPI CUDA 13.0 stack. Exact public-wheel versions prevent an existing
+# +cu129 local-version package from silently satisfying these requirements.
+torch===2.14.0
+torchaudio===2.11.0
+torchvision===0.29.0
+transformers==5.22.2

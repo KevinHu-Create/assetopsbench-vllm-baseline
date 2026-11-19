@@ -46,6 +46,11 @@ def validate(profile: dict, config: dict, environment: dict, *, allow_trial: boo
     for package in ("vllm", "torch"):
         if not software.get(package) or environment.get("packages", {}).get(package) != software[package]:
             raise ValueError(f"Shared {package} version mismatch")
+    for package in ("transformers", "tokenizers", "torchaudio", "torchvision", "flashinfer-python"):
+        if package in software and software[package] != environment.get("packages", {}).get(package):
+            raise ValueError(f"Shared {package} version mismatch")
+    if "python" in software and software["python"] != environment.get("python"):
+        raise ValueError("Shared Python version mismatch")
     if not software.get("cuda_runtime") or environment.get("torch_cuda_runtime") != software["cuda_runtime"]:
         raise ValueError("Shared PyTorch CUDA runtime mismatch")
     for key in INFERENCE_KEYS:
@@ -87,6 +92,9 @@ def main() -> None:
             raise ValueError("No NVIDIA GPU was captured")
         profile["software"].update(driver_version=rows[0][2].strip(),
             cuda_runtime=info["torch_cuda_runtime"], torch=info["packages"]["torch"])
+        profile["software"].update({k: info["packages"].get(k) for k in
+            ("transformers", "tokenizers", "torchaudio", "torchvision", "flashinfer-python")})
+        profile["software"]["python"] = info["python"]
         profile.update(status="locked", scope="candidate")
         validate(profile, load_config(args.config), info, allow_trial=True)
         write_json(args.out, profile)

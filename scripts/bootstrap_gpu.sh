@@ -14,7 +14,8 @@ if [[ ! -x .venv/bin/python ]] || ! .venv/bin/python -m pip --version >/dev/null
   fi
 fi
 .venv/bin/python -m pip install --upgrade pip
-.venv/bin/python -m pip install -r requirements-gpu.txt --extra-index-url https://download.pytorch.org/whl/cu129
+.venv/bin/python -m pip install -r requirements-gpu.txt --index-url https://pypi.org/simple
+.venv/bin/python -c 'import torch, torchaudio, torchvision; assert torch.version.cuda == "13.0"; assert torch.cuda.is_available(); print("CUDA check:", torch.__version__, torch.version.cuda, torch.cuda.get_device_name(0)); print(torch.ones(1, device="cuda") + 1)'
 .venv/bin/vllm download-kernels
 .venv/bin/python -m task2.environment --require-gpu --out outputs/environment.json
 TASK2_PYTHON=.venv/bin/python bash scripts/prepare_original.sh
