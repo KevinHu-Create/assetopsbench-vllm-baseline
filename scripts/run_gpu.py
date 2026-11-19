@@ -80,9 +80,8 @@ def main() -> None:
         raise RuntimeError("No GPU profiling trace was produced; inspect vLLM logs")
     for i, path in enumerate(traces):
         subprocess.run([sys.executable, "-m", "task2.trace_summary", str(path), "--out", str(args.out / f"trace-summary-{i}.json")], cwd=root, check=True)
-    if not args.trial:
-        subprocess.run([sys.executable, "-m", "task2.check", str(args.out)], cwd=root, check=True)
-    else:
+    subprocess.run([sys.executable, "-m", "task2.check", str(args.out), *trial_flags], cwd=root, check=True)
+    if args.trial:
         print("Real GPU trial complete; team configuration is unconfirmed, so this is not formal acceptance.")
 
 

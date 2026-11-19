@@ -9,14 +9,17 @@ from pathlib import Path
 from .common import read_json, write_json
 
 
-def check(root: Path) -> dict:
+def check(root: Path, *, allow_trial: bool = False) -> dict:
     missing = []
     environment_ids = []
     for concurrency in (1, 4, 8):
         folder = root / f"baseline-c{concurrency}"
         try:
             summary = read_json(folder / "run_summary.json")
-            if not summary.get("verified_gpu_run") or summary.get("measurement_kind") != "gpu_baseline":
+            allowed_kinds = {"gpu_baseline", "gpu_compatibility_trial"} if allow_trial else {"gpu_baseline"}
+            if not allow_trial and summary.get("measurement_kind") == "gpu_compatibility_trial":
+                missing.append(f"baseline-c{concurrency}: candidate trial; team configuration unconfirmed")
+            elif not summary.get("verified_gpu_run") or summary.get("measurement_kind") not in allowed_kinds:
                 missing.append(f"baseline-c{concurrency}: requires an unprofiled GPU run")
             environment_ids.append(summary.get("team_environment_id"))
             if not summary.get("team_environment_id"):
@@ -52,14 +55,16 @@ def check(root: Path) -> dict:
             continue
     if not cuda:
         missing.append("no trace containing CUDA kernel events")
-    return {"complete": not missing, "missing": missing, "trace_files": len(traces)}
+    return {"complete": not missing, "scope": "candidate_trial" if allow_trial else "formal_team_baseline",
+            "missing": missing, "trace_files": len(traces)}
 
 
 def main() -> None:
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("results", type=Path)
+    p.add_argument("--trial", action="store_true", help="Validate real candidate evidence without confirming team agreement")
     args = p.parse_args()
-    result = check(args.results)
+    result = check(args.results, allow_trial=args.trial)
     write_json(args.results / "acceptance.json", result)
     print(json.dumps(result, ensure_ascii=False, indent=2))
     if not result["complete"]:

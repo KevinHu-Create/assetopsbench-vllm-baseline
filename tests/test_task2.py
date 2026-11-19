@@ -102,6 +102,7 @@ class TestTask2(unittest.TestCase):
         with self.assertRaises(ValueError):
             run(self.make_workload(), self.config, self.root / "formal", "http://127.0.0.1:1/v1", None)
         self.assertFalse(check(self.root)["complete"])
+        self.assertFalse(check(self.root, allow_trial=True)["complete"])
 
     def test_real_cache_switch_and_pinned_model(self):
         off = command(self.config, 8000, None)
