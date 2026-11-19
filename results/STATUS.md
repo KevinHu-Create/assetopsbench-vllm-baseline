@@ -1,6 +1,6 @@
 # 交付状态
 
-截至 2026-11-19：**代码与本地验证完成，全局 GPU 配额已批准，T4 + AWQ 兼容性试跑准备中；团队完整配置尚未确认。**
+截至 2026-11-19：**代码与本地验证完成，全局 GPU 配额已批准，T4 + AWQ 试跑受云平台库存阻塞；团队完整配置尚未确认。**
 
 | 交付项 | 状态 | 证据 |
 | --- | --- | --- |
@@ -12,11 +12,11 @@
 | 真实 PyTorch/CUDA trace | 待执行 | 无真实 trace |
 | 复跑与 vLLM 学习资料 | 完成 | README、测量协议、学习指南 |
 
-本地验证记录见 [local-verification.json](local-verification.json)。GitHub Actions 已在 Python 3.11 / 3.12 / 3.13 上通过 [CPU verification](https://github.com/KevinHu-Create/assetopsbench-vllm-baseline/actions/runs/44596533527)。
+本地验证记录见 [local-verification.json](local-verification.json)。GitHub Actions 已在 Python 3.11 / 3.12 / 3.13 上通过 [CPU verification](https://github.com/KevinHu-Create/assetopsbench-vllm-baseline/actions/runs/44605275877)。
 
 ## GPU 平台检查
 
-独立实验项目已关联课程结算。全局 GPU 配额已批准为 1，候选区域 T4 配额各为 1。先前 L4 创建因库存不足失败，无成功 GPU 测量。根据用户补充，现尝试 T4 16GB + Qwen2.5-7B-Instruct-AWQ，并记录为候选兼容性试跑；vLLM 等剩余参数待全组同步。配额不保证实际库存。个人账户、券码和账单信息不公开。
+独立实验项目已关联课程结算。全局 GPU 配额已批准为 1，候选区域 T4 配额各为 1。先前 L4 创建因库存不足失败，无成功 GPU 测量。根据用户补充，现尝试 T4 16GB + Qwen2.5-7B-Instruct-AWQ，并记录为候选兼容性试跑；vLLM 等剩余参数待全组同步。已尝试 us-central1-a/c/f、us-east1-c、us-west1-b，均返回 T4 库存不足。us-central1-f 的失败创建一度进入回滚状态，已清理并复查：实例、磁盘、路由器、公网 IP 均为 0。仍无真实 GPU 推理或 trace。Colab notebook 已准备并检查 Python 语法，但尚未执行。配额不保证实际库存。个人账户、券码和账单信息不公开。
 
 ## 正式结果表
 

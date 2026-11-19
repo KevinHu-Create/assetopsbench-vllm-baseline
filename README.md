@@ -43,6 +43,8 @@ GCP 可用 `python3 scripts/gcp_preflight.py --project YOUR_PROJECT_ID --gpu t4`
 ```
 
 快照只锁定本次实际环境，`scope=candidate` 不代表全组已同意。试跑输出标记 `gpu_compatibility_trial`，不能通过正式基线验收。正式实验需团队对齐后使用相同的 `status=locked`、`scope=team` 配置。
+若使用 Colab，可打开 [T4/AWQ 兼容性试跑 notebook](https://colab.research.google.com/github/KevinHu-Create/assetopsbench-vllm-baseline/blob/main/notebooks/task2_t4_awq_trial.ipynb)。已检查 Python 语法，尚未执行真实 GPU 推理；先选择 T4 运行时。
+
 在 GPU 主机仓库根目录：
 
 ```bash

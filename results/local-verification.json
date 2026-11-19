@@ -30,19 +30,23 @@
   "gpu_results_available": false,
   "profiling_trace_available": false,
   "github_actions": {
-    "tested_commit": "2d3c01ac5380f81bb7af5edcb3a2dba9f4d31433",
+    "tested_commit": "483b435f1d520b4894eb16b3fc9886654d7c9ad0",
     "python_versions": [
       "3.11",
       "3.12",
       "3.13"
     ],
     "conclusion": "success",
-    "url": "https://github.com/KevinHu-Create/assetopsbench-vllm-baseline/actions/runs/44596533527"
+    "url": "https://github.com/KevinHu-Create/assetopsbench-vllm-baseline/actions/runs/44605275877"
   },
   "shared_environment_validation": {
     "draft_rejected": true,
     "gpu_or_software_drift_rejected": true,
     "candidate_requires_explicit_trial": true,
     "cache_reset_requires_positive_json": true
+  },
+  "colab_notebook": {
+    "python_syntax": "passed",
+    "gpu_execution": "not_run"
   }
 }
