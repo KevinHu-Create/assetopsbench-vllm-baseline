@@ -11,12 +11,19 @@ from .common import read_json, write_json
 
 def check(root: Path) -> dict:
     missing = []
+    environment_ids = []
     for concurrency in (1, 4, 8):
         folder = root / f"baseline-c{concurrency}"
         try:
             summary = read_json(folder / "run_summary.json")
             if not summary.get("verified_gpu_run") or summary.get("measurement_kind") != "gpu_baseline":
                 missing.append(f"baseline-c{concurrency}: requires an unprofiled GPU run")
+            environment_ids.append(summary.get("team_environment_id"))
+            if not summary.get("team_environment_id"):
+                missing.append(f"baseline-c{concurrency}: missing shared environment ID")
+            reset = read_json(folder / "cache_reset.json")
+            if reset.get("success") is not True or reset.get("after_warmup") is not True or reset.get("before_timing") is not True:
+                missing.append(f"baseline-c{concurrency}: prefix cache reset not confirmed")
             aggregate = summary["aggregate"]
             if aggregate["ok_requests"] < 30 or aggregate["output_tokens_per_second"] is None:
                 missing.append(f"baseline-c{concurrency}: need >=30 successful requests with token usage")
@@ -24,6 +31,8 @@ def check(root: Path) -> dict:
                 missing.append(f"baseline-c{concurrency}: missing logs or table")
         except (OSError, ValueError, KeyError):
             missing.append(f"baseline-c{concurrency}: no usable summary")
+    if environment_ids and len(set(environment_ids)) != 1:
+        missing.append("baseline groups used different shared environments")
     try:
         profile = read_json(root / "profile/profile_control.json")
         if not profile["stopped"]:

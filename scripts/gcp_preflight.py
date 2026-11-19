@@ -14,6 +14,7 @@ def main() -> None:
     p.add_argument("--project", required=True)
     p.add_argument("--region", default="us-central1")
     p.add_argument("--out", type=Path, default=Path("outputs/gcp-preflight.json"))
+    p.add_argument("--gpu", choices=("t4", "l4", "a100"), default="t4")
     args = p.parse_args()
     commands = {
         "billing": ["gcloud", "billing", "projects", "describe", args.project, "--format=json"],
@@ -30,13 +31,13 @@ def main() -> None:
     with ThreadPoolExecutor(max_workers=3) as pool:
         data = dict(pool.map(query, commands.items()))
     global_gpu = next((q for q in data["global"].get("quotas", []) if q["metric"] == "GPUS_ALL_REGIONS"), None)
-    regional_gpu = [q for q in data["regional"].get("quotas", []) if q["metric"] == "NVIDIA_L4_GPUS"]
+    regional_gpu = [q for q in data["regional"].get("quotas", []) if q["metric"] == {"t4": "NVIDIA_T4_GPUS", "l4": "NVIDIA_L4_GPUS", "a100": "NVIDIA_A100_GPUS"}[args.gpu]]
     available = lambda q: q is not None and q.get("limit", 0) - q.get("usage", 0) >= 1
     ready = bool(data["billing"].get("billingEnabled") and available(global_gpu) and any(available(q) for q in regional_gpu))
     report = {"project": args.project, "region": args.region,
               "billing_enabled": bool(data["billing"].get("billingEnabled")),
-              "global_gpu_quota": global_gpu, "regional_l4_quota": regional_gpu,
-              "quota_ready_for_one_l4": ready,
+              "global_gpu_quota": global_gpu, "gpu": args.gpu, "regional_gpu_quota": regional_gpu,
+              "quota_ready_for_one_gpu": ready,
               "scope": "Quota readiness only; not a guarantee of GPU stock, compatible drivers or model fit. No resources created."}
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(json.dumps(report, indent=2) + "\n")

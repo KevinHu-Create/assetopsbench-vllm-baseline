@@ -34,6 +34,10 @@ def load_config(path: Path) -> dict:
         raise ValueError("cache_mode must be off or on")
     if config["dtype"] not in {"bfloat16", "float16"}:
         raise ValueError("Use an explicit float16 or bfloat16 dtype")
+    if config.get("quantization") != "awq" or config["dtype"] != "float16":
+        raise ValueError("This shared T4 candidate requires AWQ weights with float16 compute")
+    if config.get("attention_backend") != "TRITON_ATTN" or type(config.get("enforce_eager")) is not bool:
+        raise ValueError("Pin the attention backend and eager execution mode")
     if len(config["revision"]) != 40:
         raise ValueError("Pin the Hugging Face model revision to a commit SHA")
     return config

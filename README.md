@@ -12,8 +12,8 @@
 
 - 任务一固定提交：`98ee1d0a83f2ddab3449aac204da7bd4b4f64371`。
 - IBM 固定提交：`0d044061ab3ffd4b213ddf6a0868c360d7e9667c`；不随 `main` 漂移。
-- 模型：`Qwen/Qwen2.5-7B-Instruct`，模型和 tokenizer revision 均固定。
-- 预设引擎：`vllm==0.34.0`；BF16、TP=1、上下文 4096，详见 [configs/baseline.json](configs/baseline.json)。**这些是待 GPU 验证的实验预设。**
+- 模型：`Qwen/Qwen2.5-7B-Instruct-AWQ`，模型和 tokenizer revision 均固定。
+- 预设引擎：`vllm==0.34.0`；AWQ 4-bit 权重、FP16 计算、TP=1、上下文 4096；TRITON_ATTN、eager 模式，详见 [configs/baseline.json](configs/baseline.json)。**用户已提供任务三使用该 AWQ 模型；完整运行参数仍是候选，待三项任务共同对齐。**
 
 ## 本地验证（不需要 GPU）
 
@@ -31,8 +31,18 @@ python3 -m task2.serve --print-only
 
 ## GPU 上复跑
 
-先在课程平台取得可用 Linux NVIDIA GPU 主机，并核对额度、GPU quota、驱动与显存。GCP 可先运行 `python3 scripts/gcp_preflight.py --project YOUR_PROJECT_ID` 做只读配额检查（详见测量协议）。可以先用 24GB 或更大显存的 Ampere/Ada GPU 验证此 BF16 配置是否能加载；显存是否足够以实际启动结果为准。T4 不支持 BF16，若改 FP16 或换模型，整个团队都应同步并单独标记该实验。
+当前共同环境候选为 **1 × T4 16GB + Qwen2.5-7B-Instruct-AWQ**。任务二、三、四及 OFF/ON 必须保持 GPU 型号、显存、数量、模型 revision、量化/计算精度、软件版本和推理参数一致，不能按库存单独替换 GPU。[configs/team_environment.json](configs/team_environment.json) 尚为 `draft`，正式运行会拒绝启动；`task2.team` 会核对实际硬件和软件，所有结果带同一环境 hash。
 
+GCP 可用 `python3 scripts/gcp_preflight.py --project YOUR_PROJECT_ID --gpu t4` 只读检查配额。若先做兼容性试跑，在 GPU 主机完成安装后捕获候选快照：
+
+```bash
+.venv/bin/python -m task2.team snapshot --environment outputs/environment.json \
+  --out outputs/t4-candidate.json
+.venv/bin/python scripts/run_gpu.py --trial --team-profile outputs/t4-candidate.json \
+  --out outputs/t4-trial
+```
+
+快照只锁定本次实际环境，`scope=candidate` 不代表全组已同意。试跑输出标记 `gpu_compatibility_trial`，不能通过正式基线验收。正式实验需团队对齐后使用相同的 `status=locked`、`scope=team` 配置。
 在 GPU 主机仓库根目录：
 
 ```bash

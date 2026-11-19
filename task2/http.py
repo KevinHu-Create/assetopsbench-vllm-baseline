@@ -17,3 +17,12 @@ def endpoint(url: str, method: str = "GET", timeout: float = 30) -> bytes:
 
 def json_endpoint(url: str) -> dict:
     return json.loads(endpoint(url))
+
+
+def reset_prefix_cache(base_url: str) -> dict:
+    """Require positive vLLM 0.34 confirmation; HTTP 200 alone is insufficient."""
+    raw = endpoint(base_url.rstrip("/").removesuffix("/v1") + "/reset_prefix_cache", "POST")
+    result = json.loads(raw)
+    if not isinstance(result, dict) or result.get("success") is not True:
+        raise RuntimeError("Prefix cache reset was not confirmed; do not start measurement")
+    return result

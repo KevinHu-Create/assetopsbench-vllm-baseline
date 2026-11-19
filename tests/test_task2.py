@@ -109,6 +109,9 @@ class TestTask2(unittest.TestCase):
         self.assertIn("--no-enable-prefix-caching", off)
         self.assertIn("--enable-prefix-caching", on)
         self.assertIn(self.config["revision"], off)
+        self.assertIn("--quantization", off)
+        self.assertEqual(off[off.index("--quantization") + 1], "awq")
+        self.assertEqual(off[off.index("--dtype") + 1], "float16")
         self.assertIn("--profiler-config", on)
         self.assertNotIn("--profiler-config", off)
 

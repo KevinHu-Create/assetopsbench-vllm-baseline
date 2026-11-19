@@ -30,6 +30,12 @@ def capture() -> dict:
             gpu_error = "nvidia-smi failed"
     else:
         gpu_error = "nvidia-smi unavailable; NVIDIA GPU not established"
+    torch_cuda_runtime = None
+    if gpu and packages["torch"]:
+        cuda = subprocess.run([sys.executable, "-c", "import torch; print(torch.version.cuda or '')"],
+                              capture_output=True, text=True, timeout=30)
+        if cuda.returncode == 0:
+            torch_cuda_runtime = cuda.stdout.strip() or None
     freeze = subprocess.run([sys.executable, "-m", "pip", "list", "--format=json", "--disable-pip-version-check"],
                             capture_output=True, text=True, timeout=30)
     # pip list omits installation URLs and embedded credentials that pip freeze can expose.
@@ -40,7 +46,7 @@ def capture() -> dict:
         inventory = []
     return {"captured_at": datetime.now(timezone.utc).isoformat(), "platform": platform.platform(),
             "machine": platform.machine(), "python": platform.python_version(), "packages": packages,
-            "nvidia_gpus": gpu, "gpu_error": gpu_error, "package_inventory": inventory,
+            "nvidia_gpus": gpu, "gpu_error": gpu_error, "torch_cuda_runtime": torch_cuda_runtime, "package_inventory": inventory,
             "formal_gpu_ready": bool(gpu and packages["vllm"])}
 
 

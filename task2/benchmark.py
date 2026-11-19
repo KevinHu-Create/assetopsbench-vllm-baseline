@@ -14,10 +14,12 @@ import uuid
 
 from .client import StreamClient
 from .common import digest, load_config, quantiles, read_json, write_json
-from .http import endpoint, json_endpoint
+from .http import endpoint, json_endpoint, reset_prefix_cache
+from .team import validate as validate_team
 
 SERVER_KEYS = ("model", "revision", "vllm_version", "dtype", "tensor_parallel_size", "max_model_len",
-               "gpu_memory_utilization", "max_num_seqs", "seed", "cache_mode")
+               "gpu_memory_utilization", "max_num_seqs", "seed", "cache_mode",
+               "quantization", "attention_backend", "enforce_eager")
 
 
 def summarize(rows: list[dict], wall_ms: float) -> dict:
@@ -66,12 +68,17 @@ def load_sessions(path: Path) -> list[list[dict]]:
     return sessions
 
 
-def validate_server(config: dict, manifest: dict, base_url: str) -> None:
+def validate_server(config: dict, manifest: dict, base_url: str, *, trial: bool = False) -> None:
     if manifest.get("state") != "ready" or not manifest.get("environment", {}).get("formal_gpu_ready"):
         raise ValueError("A ready GPU server manifest is required for a formal run")
+    if manifest.get("trial", False) and not trial:
+        raise ValueError("Candidate server requires an explicitly labelled trial")
     for key in SERVER_KEYS:
         if config[key] != manifest["config"][key]:
             raise ValueError(f"Server/config mismatch: {key}")
+    team_id = validate_team(manifest.get("team_environment", {}), config, manifest["environment"], allow_trial=trial)
+    if manifest.get("team_environment_id") != team_id:
+        raise ValueError("Server shared environment ID mismatch")
     version = json_endpoint(base_url.removesuffix("/v1") + "/version")
     if version.get("version") != config["vllm_version"]:
         raise ValueError("Live vLLM version differs from pinned version")
@@ -81,7 +88,7 @@ def validate_server(config: dict, manifest: dict, base_url: str) -> None:
 
 
 def run(requests: Path, config: dict, out: Path, base_url: str, server_manifest: Path | None,
-        gt_path: Path | None = None, profile: bool = False, smoke: bool = False) -> dict:
+        gt_path: Path | None = None, profile: bool = False, smoke: bool = False, trial: bool = False) -> dict:
     if out.exists() and any(out.iterdir()):
         raise ValueError("Output directory must be empty to avoid overwriting evidence")
     sessions = load_sessions(requests)
@@ -93,7 +100,7 @@ def run(requests: Path, config: dict, out: Path, base_url: str, server_manifest:
     if not smoke:
         if manifest is None:
             raise ValueError("--server-manifest is mandatory for GPU measurements")
-        validate_server(config, manifest, base_url)
+        validate_server(config, manifest, base_url, trial=trial)
     if profile and (smoke or not manifest or not manifest.get("profile_dir")):
         raise ValueError("Profiling requires a real GPU server launched with --profile-dir")
     for session in sessions:
@@ -106,8 +113,9 @@ def run(requests: Path, config: dict, out: Path, base_url: str, server_manifest:
     out.mkdir(parents=True, exist_ok=True)
     run_id = str(uuid.uuid4())
     meta = {"schema_version": "3.0", "run_id": run_id, "created_at": datetime.now(timezone.utc).isoformat(),
-            "backend": "http_smoke" if smoke else "vllm", "measurement_kind": "smoke" if smoke else "profile" if profile else "gpu_baseline",
-            "verified_gpu_run": not smoke, "config": config, "server_manifest": manifest,
+            "backend": "http_smoke" if smoke else "vllm", "measurement_kind": "smoke" if smoke else "trial_profile" if trial and profile else "gpu_compatibility_trial" if trial else "profile" if profile else "gpu_baseline",
+            "verified_gpu_run": not smoke, "team_config_confirmed": not (smoke or trial), "config": config, "server_manifest": manifest,
+            "team_environment_id": manifest.get("team_environment_id") if manifest else None,
             "workload_sha256": digest(requests.read_bytes()), "source_manifest": source_manifest,
             "timing_definition": "Client monotonic clock, before HTTP send to final SSE event; no retries; one connection per request.",
             "task1_source_commit": "98ee1d0a83f2ddab3449aac204da7bd4b4f64371"}
@@ -136,6 +144,7 @@ def run(requests: Path, config: dict, out: Path, base_url: str, server_manifest:
                 parse_ok = parse_error is None
             scenario = row.get("scenario_id", "unknown")
             result.update(schema_version="3.0", run_id=run_id, scenario_id=scenario, phase=phase,
+                          team_environment_id=meta["team_environment_id"],
                           session_id=f"{row['session_id']}-copy-{index}", seq_idx=seq, turn_idx=row.get("turn_idx", 0),
                           step_idx=row.get("step_idx", 0), request_id=request_id,
                           prev_request_id=f"{run_id}-{phase}-{index}-{seq-1}" if seq else None,
@@ -152,6 +161,9 @@ def run(requests: Path, config: dict, out: Path, base_url: str, server_manifest:
                     f.write(json.dumps(row, ensure_ascii=False) + "\n")
             if any(r["error"]["status"] != "ok" for r in warmup):
                 raise RuntimeError("Warmup failed; inspect warmup_log.jsonl before measuring")
+            if not smoke:
+                cache_reset = reset_prefix_cache(base_url)
+                write_json(out / "cache_reset.json", {"after_warmup": True, "before_timing": True, **cache_reset})
             if profile:
                 endpoint(base_url.removesuffix("/v1") + "/start_profile", "POST")
                 profiling_started = True
@@ -207,9 +219,10 @@ def main() -> None:
     p.add_argument("--gt", type=Path)
     p.add_argument("--out", type=Path, required=True)
     p.add_argument("--profile", action="store_true")
+    p.add_argument("--trial", action="store_true")
     p.add_argument("--smoke", action="store_true", help="Label HTTP fixture tests as non-GPU smoke evidence")
     args = p.parse_args()
-    result = run(args.requests, load_config(args.config), args.out, args.base_url.rstrip("/"), args.server_manifest, args.gt, args.profile, args.smoke)
+    result = run(args.requests, load_config(args.config), args.out, args.base_url.rstrip("/"), args.server_manifest, args.gt, args.profile, args.smoke, args.trial)
     print(json.dumps(result["aggregate"], indent=2))
     if result["aggregate"]["failed_requests"]:
         raise SystemExit(2)
