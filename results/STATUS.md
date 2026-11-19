@@ -12,6 +12,8 @@
 | 真实 PyTorch/CUDA trace | 待执行 | 无真实 trace |
 | 复跑与 vLLM 学习资料 | 完成 | README、测量协议、学习指南 |
 
+本地验证记录见 [local-verification.json](local-verification.json)。GitHub Actions 已在 Python 3.11 / 3.12 / 3.13 上通过 [CPU verification](https://github.com/KevinHu-Create/assetopsbench-vllm-baseline/actions/runs/44596533527)。
+
 ## 正式结果表
 
 | 工作负载 | GPU | dtype | APC | 并发 | TTFT p50/p95 | output token/s | RPS | 失败 |

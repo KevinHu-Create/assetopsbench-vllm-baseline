@@ -1,0 +1,42 @@
+{
+  "verified_on": "2026-11-19",
+  "python": "3.13.9",
+  "unit_tests": {
+    "total": 18,
+    "passed": 18
+  },
+  "http_smoke": {
+    "passed": true,
+    "measurement_kind": "smoke",
+    "verified_gpu_run": false,
+    "measured_requests": 4,
+    "warmup_requests": 1
+  },
+  "original_workload_manifest": {
+    "repository": "https://github.com/IBM/AssetOpsBench",
+    "commit": "0d044061ab3ffd4b213ddf6a0868c360d7e9667c",
+    "baseline_kind": "official_direct_llm_prompt_streaming_transport",
+    "scenario_id": "scenario_1",
+    "question_path": "src/couchdb/scenarios_data/scenario_1/question.txt",
+    "runner_path": "src/agent/direct_llm_agent/runner.py",
+    "source_sha256": {
+      "src/agent/direct_llm_agent/runner.py": "03aa880b0b4297075fb26dcc066b0f5df7e22db8ad462523d54f4f117aac6125",
+      "src/couchdb/scenarios_data/scenario_1/question.txt": "604f1cb3deb924c1e21865a0e580bb7c1fe61e39f0df3993d755b2000ffa066c",
+      "src/couchdb/scenarios_data/scenario_1/groundtruth.txt": "d4735e3a265e16eee03f59718b9b5d03019c07d8b6c51f90da3a666eec13ab35"
+    },
+    "requests_sha256": "7b84654d348e9fa8363bcc1f94ca00d1e5fcdf94252da9e65fad7905207b1e6c",
+    "scope": "Model-only baseline, matching upstream direct_llm; no MCP tools or data retrieval. Not a full agent baseline."
+  },
+  "gpu_results_available": false,
+  "profiling_trace_available": false,
+  "github_actions": {
+    "tested_commit": "2d3c01ac5380f81bb7af5edcb3a2dba9f4d31433",
+    "python_versions": [
+      "3.11",
+      "3.12",
+      "3.13"
+    ],
+    "conclusion": "success",
+    "url": "https://github.com/KevinHu-Create/assetopsbench-vllm-baseline/actions/runs/44596533527"
+  }
+}
