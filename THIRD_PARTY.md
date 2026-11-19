@@ -1,0 +1,6 @@
+# Sources and attribution
+
+- `framework/`, `raw_data/`, `scenarios/`, `spec.md`, the original pipeline tests and the task-one documentation come from [HaochengLu/proactive-assetops-bench](https://github.com/HaochengLu/proactive-assetops-bench), commit `98ee1d0a83f2ddab3449aac204da7bd4b4f64371`. Original Git history and authorship are retained. No license has been invented or applied to those files.
+- Original benchmark tasks and prompt text are fetched at preparation time from [IBM/AssetOpsBench](https://github.com/IBM/AssetOpsBench), commit `0d044061ab3ffd4b213ddf6a0868c360d7e9667c`, distributed there under [Apache-2.0](https://github.com/IBM/AssetOpsBench/blob/0d044061ab3ffd4b213ddf6a0868c360d7e9667c/LICENSE). Source files are not edited. Generated workload files are ignored by Git; their manifest identifies paths and SHA256 hashes.
+- The Task 2 adapter extracts the original direct-LLM prompt through a restricted Python AST reader and changes HTTP transport to streaming for measurement. It does not run or claim to reproduce the complete MCP agent benchmark, its tools or its evaluator.
+- Qwen model usage follows its [model card and license](https://huggingface.co/Qwen/Qwen2.5-7B-Instruct). Model weights are downloaded on the GPU host and are not included in this repository.

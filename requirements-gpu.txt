@@ -1,0 +1,2 @@
+# Pinned engine. The complete resolved package inventory is recorded per GPU run.
+vllm==0.34.0
