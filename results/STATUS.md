@@ -1,6 +1,6 @@
 # 交付状态
 
-截至 2026-11-19：**代码与本地验证完成，GPU 实验待访问权限/算力确认。**
+截至 2026-11-19：**代码与本地验证完成，GPU 实验待云平台全局 GPU 配额批准。**
 
 | 交付项 | 状态 | 证据 |
 | --- | --- | --- |
@@ -13,6 +13,10 @@
 | 复跑与 vLLM 学习资料 | 完成 | README、测量协议、学习指南 |
 
 本地验证记录见 [local-verification.json](local-verification.json)。GitHub Actions 已在 Python 3.11 / 3.12 / 3.13 上通过 [CPU verification](https://github.com/KevinHu-Create/assetopsbench-vllm-baseline/actions/runs/44596533527)。
+
+## GPU 平台检查
+
+独立实验项目已关联课程结算并启用 Compute Engine。区域 L4 配额为 1，但全局 GPU 配额为 0；已向云平台提交全局配额提高至 1 的申请，目前等待批准。未启动收费实例，也没有真实 GPU 性能或 trace 结果。个人账户、券码和账单信息不公开；检查步骤可用 `scripts/gcp_preflight.py` 复跑。
 
 ## 正式结果表
 

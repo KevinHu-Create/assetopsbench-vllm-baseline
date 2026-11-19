@@ -99,3 +99,16 @@ python3 -m task2.serve --config configs/cache-on.json --out outputs/server-on
 `task2.benchmark` 校验 ready GPU manifest、服务端版本和模型列表，并复制服务配置进结果。manifest 是操作记录，不是硬件远程证明；不要手动编造或复用其他 GPU 的 manifest。`task2.check` 仅在三组未采集 profiling 的真实 GPU 测量、各至少 30 个成功请求、token 统计和含 CUDA kernel 的 trace 都存在时返回成功。
 
 参考：[vLLM 服务参数](https://docs.vllm.ai/en/stable/cli/serve/)、[Profiling](https://docs.vllm.ai/en/latest/contributing/profiling/)、[APC](https://docs.vllm.ai/en/stable/features/automatic_prefix_caching/)。
+
+## GCP 配额前置检查
+
+教育额度到账与 GPU 配额是两回事。在已经授权的 Cloud Shell 中运行以下只读检查：
+
+```bash
+python3 scripts/gcp_preflight.py --project YOUR_PROJECT_ID --region us-central1 \
+  --out outputs/gcp-preflight.json
+```
+
+至少需要全局 `GPUS_ALL_REGIONS` 剩余配额 1，以及区域 `NVIDIA_L4_GPUS` 剩余配额 1。区域配额足够但全局为 0 时，仍无法启动 GPU。该脚本不会创建收费资源，配额不满足时返回退出码 2。申请配额不等于申请结果已获准；额度、配额和实际库存分别核验。
+
+GPU 实例还应配置 `--max-run-duration` 与明确的终止动作，并在下载结果后清理实例和关联存储。预算提醒并不是消费硬上限，不能代替自动停机和资源清理。参考：[Google GPU 配额说明](https://docs.cloud.google.com/compute/resource-usage)、[限制 VM 运行时间](https://docs.cloud.google.com/compute/docs/instances/limit-vm-runtime)。

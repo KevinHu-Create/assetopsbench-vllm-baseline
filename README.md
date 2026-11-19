@@ -31,7 +31,7 @@ python3 -m task2.serve --print-only
 
 ## GPU 上复跑
 
-先在课程平台取得可用 Linux NVIDIA GPU 主机，并核对额度、GPU quota、驱动与显存。可以先用 24GB 或更大显存的 Ampere/Ada GPU 验证此 BF16 配置是否能加载；显存是否足够以实际启动结果为准。T4 不支持 BF16，若改 FP16 或换模型，整个团队都应同步并单独标记该实验。
+先在课程平台取得可用 Linux NVIDIA GPU 主机，并核对额度、GPU quota、驱动与显存。GCP 可先运行 `python3 scripts/gcp_preflight.py --project YOUR_PROJECT_ID` 做只读配额检查（详见测量协议）。可以先用 24GB 或更大显存的 Ampere/Ada GPU 验证此 BF16 配置是否能加载；显存是否足够以实际启动结果为准。T4 不支持 BF16，若改 FP16 或换模型，整个团队都应同步并单独标记该实验。
 
 在 GPU 主机仓库根目录：
 
