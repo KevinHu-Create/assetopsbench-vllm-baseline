@@ -1,0 +1,7 @@
+# Preserve machine-generated evidence byte for byte, including CSV CRLF and
+# whitespace emitted by Prometheus, terminal logs and the upstream license.
+results/colab-t4-20261119/**/*.csv whitespace=cr-at-eol
+results/colab-t4-20261119/**/*.prom -whitespace
+results/colab-t4-20261119/t4-trial/server/*.log -whitespace
+results/colab-t4-20261119/t4-trial/traces/*.txt -whitespace
+third_party/IBM-AssetOpsBench-LICENSE.txt -whitespace

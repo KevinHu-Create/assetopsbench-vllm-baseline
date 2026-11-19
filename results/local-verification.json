@@ -2,8 +2,8 @@
   "verified_on": "2026-11-19",
   "python": "3.13.9",
   "unit_tests": {
-    "total": 24,
-    "passed": 24
+    "total": 27,
+    "passed": 27
   },
   "http_smoke": {
     "passed": true,
@@ -27,17 +27,17 @@
     "requests_sha256": "7b84654d348e9fa8363bcc1f94ca00d1e5fcdf94252da9e65fad7905207b1e6c",
     "scope": "Model-only baseline, matching upstream direct_llm; no MCP tools or data retrieval. Not a full agent baseline."
   },
-  "gpu_results_available": false,
-  "profiling_trace_available": false,
+  "gpu_results_available": true,
+  "profiling_trace_available": true,
   "github_actions": {
-    "tested_commit": "483b435f1d520b4894eb16b3fc9886654d7c9ad0",
+    "tested_commit": "c5767da841b5e11aed0c10e271618c423263cb5e",
     "python_versions": [
       "3.11",
       "3.12",
       "3.13"
     ],
     "conclusion": "success",
-    "url": "https://github.com/KevinHu-Create/assetopsbench-vllm-baseline/actions/runs/44605275877"
+    "url": "https://github.com/KevinHu-Create/assetopsbench-vllm-baseline/actions/runs/44609280039"
   },
   "shared_environment_validation": {
     "draft_rejected": true,
@@ -47,6 +47,10 @@
   },
   "colab_notebook": {
     "python_syntax": "passed",
-    "gpu_execution": "not_run"
-  }
+    "gpu_execution": "completed; evidence measured at c5767da; later validation-only updates included in notebook"
+  },
+  "gpu_measurement_scope": "candidate_trial",
+  "real_gpu_evidence": "results/colab-t4-20261119/",
+  "task_accuracy": 0.0,
+  "full_agent_mcp_task_success_verified": false
 }

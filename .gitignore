@@ -9,5 +9,6 @@ __pycache__/
 upstream/
 workloads/
 *.pt.trace.json*
+!results/colab-t4-20261119/t4-trial/traces/*.pt.trace.json.gz
 *.nsys-rep
 *.qdrep

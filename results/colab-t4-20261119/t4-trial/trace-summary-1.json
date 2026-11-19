@@ -1,0 +1,309 @@
+{
+  "trace_name": "rank0.1795120660745096655.pt.trace.json.gz",
+  "trace_sha256": "4d497b42f58fc1cfda75ab06af6210310b6b23d3199777020cff8ccc0fed29a2",
+  "total_trace_events": 41204,
+  "duration_definition": "Sum of X-event durations in microseconds; inclusive and potentially overlapping. Not critical-path wall time.",
+  "prefill_decode_attribution": "Not inferred from kernel names. Inspect request IDs, iteration ranges and the original trace in Perfetto.",
+  "top_events": [
+    {
+      "category": "Trace",
+      "name": "PyTorch Profiler (0)",
+      "events": 1,
+      "duration_us": 690345.253
+    },
+    {
+      "category": "gpu_user_annotation",
+      "name": "execute_context_1(245)_generation_0(0)",
+      "events": 2,
+      "duration_us": 379551.66099999996
+    },
+    {
+      "category": "user_annotation",
+      "name": "execute_context_0(0)_generation_1(1)",
+      "events": 6,
+      "duration_us": 357291.017
+    },
+    {
+      "category": "kernel",
+      "name": "void marlin::Marlin<1125899906910725l, 1125899906843648l, 1125899906910725l, 1125899906910725l, 256, 4, 16, 4, false, 2, 8, false>(int4 const*, int4 const*, int4*, int4*, int4 const*, int4 const*, float const*, int4 const*, int, int, int, int, int*, bool, bool, bool, int)",
+      "events": 448,
+      "duration_us": 285533.3380000001
+    },
+    {
+      "category": "gpu_user_annotation",
+      "name": "execute_context_0(0)_generation_1(1)",
+      "events": 6,
+      "duration_us": 228405.18399999998
+    },
+    {
+      "category": "cpu_op",
+      "name": "vllm::marlin_gemm",
+      "events": 896,
+      "duration_us": 141424.85999999967
+    },
+    {
+      "category": "cuda_runtime",
+      "name": "cudaEventSynchronize",
+      "events": 8,
+      "duration_us": 140897.95500000002
+    },
+    {
+      "category": "user_annotation",
+      "name": "execute_context_1(245)_generation_0(0)",
+      "events": 2,
+      "duration_us": 131471.399
+    },
+    {
+      "category": "kernel",
+      "name": "void marlin::Marlin<1125899906910725l, 1125899906843648l, 1125899906910725l, 1125899906910725l, 256, 1, 8, 8, true, 2, 8, false>(int4 const*, int4 const*, int4*, int4*, int4 const*, int4 const*, float const*, int4 const*, int, int, int, int, int*, bool, bool, bool, int)",
+      "events": 672,
+      "duration_us": 99941.65699999999
+    },
+    {
+      "category": "cpu_op",
+      "name": "_C::marlin_gemm",
+      "events": 896,
+      "duration_us": 95132.52500000005
+    },
+    {
+      "category": "cpu_op",
+      "name": "vllm::unified_attention_with_output",
+      "events": 224,
+      "duration_us": 90234.33999999998
+    },
+    {
+      "category": "kernel",
+      "name": "kernel_unified_attention",
+      "events": 224,
+      "duration_us": 73971.32099999998
+    },
+    {
+      "category": "cpu_op",
+      "name": "vllm::unified_kv_cache_update",
+      "events": 224,
+      "duration_us": 59292.918000000005
+    },
+    {
+      "category": "cpu_op",
+      "name": "aten::empty",
+      "events": 4128,
+      "duration_us": 35438.52400000004
+    },
+    {
+      "category": "kernel",
+      "name": "std::enable_if<!(false), void>::type internal::gemvx::kernel<int, int, __half, __half, __half, float, false, true, true, false, 7, false, cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<__half const>, cublasGemvTensorStridedBatched<__half const>, cublasGemvTensorStridedBatched<__half>, float> >(cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<__half const>, cublasGemvTensorStridedBatched<__half const>, cublasGemvTensorStridedBatched<__half>, float>)",
+      "events": 8,
+      "duration_us": 33467.177
+    },
+    {
+      "category": "cuda_runtime",
+      "name": "cudaLaunchKernel",
+      "events": 2104,
+      "duration_us": 30530.66400000001
+    },
+    {
+      "category": "cpu_op",
+      "name": "_C::fused_add_rms_norm",
+      "events": 448,
+      "duration_us": 13291.696999999998
+    },
+    {
+      "category": "cuda_driver",
+      "name": "cuLaunchKernelEx",
+      "events": 690,
+      "duration_us": 10797.870000000004
+    },
+    {
+      "category": "kernel",
+      "name": "void vllm::act_and_mul_kernel<c10::Half, __half2, &(c10::Half vllm::silu_kernel<c10::Half>(c10::Half const&, float)), &(__half2 vllm::packed_silu_kernel<__half2>(__half2 const&, float)), true, true, false, false>(c10::Half*, c10::Half const*, int, float, float, float)",
+      "events": 224,
+      "duration_us": 8379.570999999998
+    },
+    {
+      "category": "cpu_op",
+      "name": "aten::split",
+      "events": 448,
+      "duration_us": 7980.113999999994
+    },
+    {
+      "category": "cpu_op",
+      "name": "aten::slice",
+      "events": 1524,
+      "duration_us": 6860.577999999999
+    },
+    {
+      "category": "cpu_op",
+      "name": "_C::rotary_embedding",
+      "events": 224,
+      "duration_us": 6784.3730000000005
+    },
+    {
+      "category": "cpu_op",
+      "name": "aten::reshape",
+      "events": 1816,
+      "duration_us": 6181.444999999992
+    },
+    {
+      "category": "cpu_op",
+      "name": "_C::silu_and_mul",
+      "events": 224,
+      "duration_us": 5940.1410000000005
+    },
+    {
+      "category": "cpu_op",
+      "name": "aten::narrow",
+      "events": 896,
+      "duration_us": 5729.405999999998
+    },
+    {
+      "category": "kernel",
+      "name": "std::enable_if<(((8)>(0)))&&vllm::_typeConvert<c10::Half>::exists, void>::type vllm::fused_add_rms_norm_kernel<c10::Half, 8, true>(c10::Half*, long, c10::Half*, c10::Half const*, float, int, int, long)",
+      "events": 448,
+      "duration_us": 4815.5689999999995
+    },
+    {
+      "category": "cpu_op",
+      "name": "aten::transpose",
+      "events": 456,
+      "duration_us": 4301.428000000002
+    },
+    {
+      "category": "cpu_op",
+      "name": "aten::view",
+      "events": 2946,
+      "duration_us": 4225.198000000003
+    },
+    {
+      "category": "cuda_runtime",
+      "name": "cudaFuncSetAttribute",
+      "events": 1120,
+      "duration_us": 4152.18
+    },
+    {
+      "category": "cpu_op",
+      "name": "aten::as_strided",
+      "events": 3146,
+      "duration_us": 4133.148999999994
+    },
+    {
+      "category": "cpu_op",
+      "name": "aten::new_empty",
+      "events": 256,
+      "duration_us": 3668.5219999999986
+    },
+    {
+      "category": "cuda_runtime",
+      "name": "cudaDeviceGetAttribute",
+      "events": 3584,
+      "duration_us": 2671.6629999999964
+    },
+    {
+      "category": "kernel",
+      "name": "void vllm::rotary_embedding_kernel<c10::Half, c10::Half, true>(long const*, c10::Half*, c10::Half*, c10::Half const*, int, long, long, long, int, int, int, long, bool)",
+      "events": 224,
+      "duration_us": 2204.408999999999
+    },
+    {
+      "category": "cpu_op",
+      "name": "aten::unbind",
+      "events": 8,
+      "duration_us": 1972.5059999999999
+    },
+    {
+      "category": "cpu_op",
+      "name": "aten::split_with_sizes",
+      "events": 224,
+      "duration_us": 1970.5790000000009
+    },
+    {
+      "category": "cpu_op",
+      "name": "aten::to",
+      "events": 56,
+      "duration_us": 1936.6349999999995
+    },
+    {
+      "category": "cpu_op",
+      "name": "aten::_to_copy",
+      "events": 32,
+      "duration_us": 1834.7479999999998
+    },
+    {
+      "category": "cpu_op",
+      "name": "aten::expand",
+      "events": 450,
+      "duration_us": 1797.7640000000004
+    },
+    {
+      "category": "cpu_op",
+      "name": "aten::copy_",
+      "events": 56,
+      "duration_us": 1455.258
+    },
+    {
+      "category": "cpu_op",
+      "name": "aten::index",
+      "events": 24,
+      "duration_us": 1341.4449999999997
+    },
+    {
+      "category": "cpu_op",
+      "name": "aten::linear",
+      "events": 8,
+      "duration_us": 962.598
+    },
+    {
+      "category": "cpu_op",
+      "name": "aten::fill_",
+      "events": 40,
+      "duration_us": 910.831
+    },
+    {
+      "category": "kernel",
+      "name": "reshape_and_cache_kernel_flash",
+      "events": 224,
+      "duration_us": 894.2339999999997
+    },
+    {
+      "category": "cpu_op",
+      "name": "aten::arange",
+      "events": 16,
+      "duration_us": 867.108
+    },
+    {
+      "category": "cpu_op",
+      "name": "aten::matmul",
+      "events": 8,
+      "duration_us": 819.854
+    },
+    {
+      "category": "cpu_op",
+      "name": "aten::embedding",
+      "events": 8,
+      "duration_us": 815.791
+    },
+    {
+      "category": "cpu_op",
+      "name": "aten::mm",
+      "events": 8,
+      "duration_us": 791.847
+    },
+    {
+      "category": "overhead",
+      "name": "Activity Buffer Request",
+      "events": 1,
+      "duration_us": 785.055
+    },
+    {
+      "category": "cpu_op",
+      "name": "aten::index_select",
+      "events": 8,
+      "duration_us": 777.1390000000001
+    },
+    {
+      "category": "kernel",
+      "name": "reduce_segments",
+      "events": 168,
+      "duration_us": 621.6189999999998
+    }
+  ]
+}

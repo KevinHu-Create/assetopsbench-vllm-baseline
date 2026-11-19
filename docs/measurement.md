@@ -117,7 +117,7 @@ GPU 实例还应配置 `--max-run-duration` 与明确的终止动作，并在下
 
 当前用户指定 T4 16GB，任务三已使用 `Qwen/Qwen2.5-7B-Instruct-AWQ`。候选配置固定模型/Tokenizer SHA、AWQ 权重量化、FP16 计算、vLLM 0.34.0、TRITON_ATTN、eager、TP=1、上下文 4096、最大序列 8。其他同学的启动命令和完整软件版本尚未知，不能声明旧结果可直接合并。
 
-vLLM 0.34 的原生缓存重置路由属于开发接口。本仓库通过官方 `--middleware` 扩展点只提供 `/reset_prefix_cache`：仅接受 loopback 的 POST、保留可选 API key 校验、不允许中断运行请求或重置外部缓存，并要求引擎确认成功。其余开发 RPC 保持关闭；服务绑定 `127.0.0.1`。安装脚本兼容 Colab 缺少 `ensurepip` 的运行时，使用固定版本 `virtualenv` 为独立环境初始化 pip。
+vLLM 0.34 的原生缓存重置路由属于开发接口。本仓库通过官方 `--middleware` 扩展点只提供 `/reset_prefix_cache`：仅接受 loopback 的 POST、保留可选 API key 校验、不允许中断运行请求或重置外部缓存，并要求引擎确认成功。其余开发 RPC 保持关闭；服务绑定 `127.0.0.1`。安装脚本兼容 Colab 缺少 `ensurepip` 的运行时，使用固定版本 `virtualenv` 为独立环境初始化 pip。 本次固定 PyPI 的 Torch 2.14.0、TorchAudio 2.11.0、TorchVision 0.29.0（CUDA 13.0），不混用其他 CUDA wheel 索引；安装后实际导入并执行 GPU 张量计算，再启动 vLLM。
 
 正式入口拒绝 draft、GPU 型号/显存/数量不同、驱动或 PyTorch/CUDA/vLLM 漂移，以及推理参数不同。`task2.team snapshot` 保留要求的 GPU 和模型，只记录本次实际软件版本为 candidate；必须显式 `--trial` 才能启动服务并计时。trial 输出不能通过 `task2.check`。配置共同确认后再采用同一团队配置重跑各任务。
 

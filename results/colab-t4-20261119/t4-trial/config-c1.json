@@ -1,0 +1,21 @@
+{
+  "model": "Qwen/Qwen2.5-7B-Instruct-AWQ",
+  "revision": "b25037543e9394b818fdfca67ab2a00ecc7dd641",
+  "vllm_version": "0.34.0",
+  "dtype": "float16",
+  "tensor_parallel_size": 1,
+  "max_model_len": 4096,
+  "gpu_memory_utilization": 0.9,
+  "max_num_seqs": 8,
+  "seed": 42,
+  "temperature": 0.0,
+  "max_tokens": 2048,
+  "cache_mode": "off",
+  "concurrency": 1,
+  "warmup_sessions": 3,
+  "measured_sessions": 30,
+  "timeout_seconds": 120,
+  "quantization": "awq",
+  "attention_backend": "TRITON_ATTN",
+  "enforce_eager": true
+}

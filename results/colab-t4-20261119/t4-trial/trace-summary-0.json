@@ -1,0 +1,15 @@
+{
+  "trace_name": "1d28685c165c_9390.async_llm.1795120660605150205.pt.trace.json.gz",
+  "trace_sha256": "e72758843f5493d2e11a680240a650ef33d1c90d98c40bc9d15998afbf3d04a4",
+  "total_trace_events": 7,
+  "duration_definition": "Sum of X-event durations in microseconds; inclusive and potentially overlapping. Not critical-path wall time.",
+  "prefill_decode_attribution": "Not inferred from kernel names. Inspect request IDs, iteration ranges and the original trace in Perfetto.",
+  "top_events": [
+    {
+      "category": "Trace",
+      "name": "PyTorch Profiler (0)",
+      "events": 1,
+      "duration_us": 676766.961
+    }
+  ]
+}

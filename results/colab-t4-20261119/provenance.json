@@ -1,0 +1,31 @@
+{
+  "date": "2026-11-19",
+  "platform": "Google Colab",
+  "measured_code_commit": "c5767da841b5e11aed0c10e271618c423263cb5e",
+  "original_download_zip_sha256": "9384effd553a61ea06feedff0da73df0724b24c18f532053408e28b282af62ea",
+  "team_environment_id": "98ce7214309d01bcf234ea05043e8ede28268c0a8f1338c59165013cc93c5433",
+  "measurement_scope": "candidate_trial",
+  "team_configuration_confirmed": false,
+  "real_gpu_verified": true,
+  "cuda_kernel_events": 2794,
+  "model_answer": "45",
+  "official_ground_truth": "2",
+  "transport_failures": 0,
+  "task_accuracy": 0.0,
+  "cache_mode": "off",
+  "independent_repeats_per_concurrency": 1,
+  "measured_sessions_per_concurrency": 30,
+  "warmup_sessions_per_concurrency": 3,
+  "profile_measured_sessions": 2,
+  "runtime_released_after_download": true,
+  "formal_acceptance": {
+    "complete": false,
+    "scope": "formal_team_baseline",
+    "missing": [
+      "baseline-c1: candidate trial; team configuration unconfirmed",
+      "baseline-c4: candidate trial; team configuration unconfirmed",
+      "baseline-c8: candidate trial; team configuration unconfirmed"
+    ],
+    "trace_files": 2
+  }
+}

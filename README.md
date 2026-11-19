@@ -2,18 +2,18 @@
 
 任务二的代码、复跑流程和测量协议。基于 [HaochengLu/proactive-assetops-bench](https://github.com/HaochengLu/proactive-assetops-bench) 的任务一框架扩展，保留其提交历史、`framework/` 和场景协议。
 
-**当前状态：代码与本地 HTTP 流式验证已通过；真实 NVIDIA GPU 基线与 CUDA profiling 尚未执行。没有可提交的真实 TTFT/吞吐量数字。** 最新交付状态见 [results/STATUS.md](results/STATUS.md)。
+**当前状态：Colab T4 + AWQ 的真实候选试跑已完成：并发 1/4/8 各 30 个测量请求，传输失败为 0，并取得真实 CUDA trace。官方无工具 direct_llm 模式的答案正确率为 0；完整 Agent/MCP 任务成功尚未验证。** [实测结果与原始证据](results/colab-t4-20261119/README.md)。 最新交付状态见 [results/STATUS.md](results/STATUS.md)。
 
 ## 任务二做什么
 
 在同一 GPU、模型、精度和推理设置下，选一个 IBM 原版任务，记录 TTFT、请求吞吐量、输出 token 吞吐量与失败情况，并单独采集可分析的 GPU trace。任务三、四随后复用这套服务环境；前缀缓存收益需要在**同一主动场景的 OFF/ON** 或相同固定请求上比较，不能拿原版与改写场景的差值代替缓存收益。
 
-本仓库选择 IBM 官方 `scenario_1`：统计 MAIN 站点的全部工单。测量入口使用官方已有的 **direct_llm 模型基线**：原题与官方 prompt 保持一致，通过 AST 读取固定版本源码，再把相同 messages 发到 vLLM 流式接口以测 TTFT。**未运行官方整套 Agent/MCP 工具链；不向模型补入工单数据或 GT。** 这项模型基线可能答错，答案准确率与性能分别报告。它适合任务二的原版性能参考；若团队要求“原版”必须是完整工具 Agent，需要另选官方 Agent runner，不能把当前结果当成完整 Agent 基线。
+本仓库选择 IBM 官方 `scenario_1`：统计 MAIN 站点的全部工单。测量入口使用官方已有的 **direct_llm 模型基线**：原题与官方 prompt 保持一致，通过 AST 读取固定版本源码，再把相同 messages 发到 vLLM 流式接口以测 TTFT。**未运行官方整套 Agent/MCP 工具链；不向模型补入工单数据或 GT。** 本次 90 次测量均输出 `45`，GT 为 `2`，答案准确率为 0；准确率与性能分别报告。它适合任务二的原版性能参考；若团队要求“原版”必须是完整工具 Agent，需要另选官方 Agent runner，不能把当前结果当成完整 Agent 基线。
 
 - 任务一固定提交：`98ee1d0a83f2ddab3449aac204da7bd4b4f64371`。
 - IBM 固定提交：`0d044061ab3ffd4b213ddf6a0868c360d7e9667c`；不随 `main` 漂移。
 - 模型：`Qwen/Qwen2.5-7B-Instruct-AWQ`，模型和 tokenizer revision 均固定。
-- 预设引擎：`vllm==0.34.0`；AWQ 4-bit 权重、FP16 计算、TP=1、上下文 4096；TRITON_ATTN、eager 模式，详见 [configs/baseline.json](configs/baseline.json)。**用户已提供任务三使用该 AWQ 模型；完整运行参数仍是候选，待三项任务共同对齐。**
+- 预设引擎：`vllm==0.34.0`；AWQ 4-bit 权重、FP16 计算、TP=1、上下文 4096；TRITON_ATTN、eager 模式，详见 [configs/baseline.json](configs/baseline.json)。**已在 Colab T4 上验证该配置；完整运行参数仍是候选，待三项任务共同对齐。**
 
 ## 本地验证（不需要 GPU）
 
@@ -42,8 +42,8 @@ GCP 可用 `python3 scripts/gcp_preflight.py --project YOUR_PROJECT_ID --gpu t4`
   --out outputs/t4-trial
 ```
 
-快照只锁定本次实际环境，`scope=candidate` 不代表全组已同意。试跑输出标记 `gpu_compatibility_trial`，不能通过正式基线验收。正式实验需团队对齐后使用相同的 `status=locked`、`scope=team` 配置。
-若使用 Colab，可打开 [T4/AWQ 兼容性试跑 notebook](https://colab.research.google.com/github/KevinHu-Create/assetopsbench-vllm-baseline/blob/main/notebooks/task2_t4_awq_trial.ipynb)。已检查 Python 语法，尚未执行真实 GPU 推理；先选择 T4 运行时。
+本次已测配置见 [configs/t4-colab-candidate.json](configs/t4-colab-candidate.json)，驱动、Python、Torch/CUDA 等版本不匹配时会拒绝复用。快照只锁定本次实际环境，`scope=candidate` 不代表全组已同意。试跑输出标记 `gpu_compatibility_trial`，不能通过正式基线验收。正式实验需团队对齐后使用相同的 `status=locked`、`scope=team` 配置。
+若使用 Colab，可打开 [T4/AWQ 兼容性试跑 notebook](https://colab.research.google.com/github/KevinHu-Create/assetopsbench-vllm-baseline/blob/main/notebooks/task2_t4_awq_trial.ipynb)。已完成真实 GPU 试跑，先选择 T4 运行时；当前 notebook 固定相同推理实现，并包含后续补强的候选验收检查。
 
 在 GPU 主机仓库根目录：
 

@@ -63,4 +63,4 @@ T4 属于 Turing，不能直接套用 BF16 或要求 Ampere 的 FlashAttention �
 | 4. 缓存实验 | APC 文档；任务一的 `framework/prompt.py` | 证明 OFF/ON 请求相同，确认服务端缓存开关与命中统计 |
 | 5. 性能定位 | [Profiling vLLM](https://docs.vllm.ai/en/latest/contributing/profiling/)；`task2/trace_summary.py` | 在真实 trace 中看 CPU、GPU 和等待区间，解释耗时证据 |
 
-任务二交付后的学习成果应是：你能启动可复现的服务、说明每个性能数字怎么测出来、读懂一个真实 trace，并解释 APC 什么时候可能有收益。当前仓库没有真实 GPU 数据，不能提前得出缓存加速比例或 Prefill/Decode 瓶颈结论。
+任务二交付后的学习成果应是：你能启动可复现的服务、说明每个性能数字怎么测出来、读懂一个真实 trace，并解释 APC 什么时候可能有收益。仓库已提供 [T4 实测数据与真实 GPU trace](../results/colab-t4-20261119/README.md)，可对照阅读。当前只有 APC OFF，不能得出缓存加速比例；Prefill/Decode 瓶颈判断仍须结合具体时间线和请求标识。

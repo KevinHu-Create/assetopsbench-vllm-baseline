@@ -1,0 +1,65 @@
+{
+  "profile_version": 1,
+  "status": "locked",
+  "applies_to_tasks": [
+    2,
+    3,
+    4
+  ],
+  "gpu": {
+    "name": "Tesla T4",
+    "memory_mib": 15360,
+    "count": 1
+  },
+  "software": {
+    "driver_version": "580.82.07",
+    "cuda_runtime": "13.0",
+    "vllm": "0.34.0",
+    "torch": "2.14.0",
+    "transformers": "5.22.2",
+    "tokenizers": "0.23.3",
+    "torchaudio": "2.11.0",
+    "torchvision": "0.29.0",
+    "flashinfer-python": "0.7.3",
+    "python": "3.13.16"
+  },
+  "inference": {
+    "model": "Qwen/Qwen2.5-7B-Instruct-AWQ",
+    "revision": "b25037543e9394b818fdfca67ab2a00ecc7dd641",
+    "vllm_version": "0.34.0",
+    "dtype": "float16",
+    "tensor_parallel_size": 1,
+    "max_model_len": 4096,
+    "gpu_memory_utilization": 0.9,
+    "max_num_seqs": 8,
+    "seed": 42,
+    "temperature": 0.0,
+    "max_tokens": 2048,
+    "quantization": "awq",
+    "attention_backend": "TRITON_ATTN",
+    "enforce_eager": true
+  },
+  "deployment": {
+    "one_vllm_instance_per_run": true,
+    "exclusive_gpu_measurement": true
+  },
+  "protocol": {
+    "primary_concurrency": 4,
+    "full_project_concurrencies": [
+      1,
+      4,
+      8
+    ],
+    "full_project_repeats": 5,
+    "identical_warmup": true,
+    "reset_prefix_cache_after_warmup": true,
+    "heavy_profiler_separate": true
+  },
+  "allowed_experimental_variables": [
+    "cache_mode",
+    "client_concurrency",
+    "scenario_or_fixed_workload"
+  ],
+  "note": "User requested one T4 16GB and Qwen2.5-7B-Instruct-AWQ, also used in task 3. Runtime versions/remaining parameters have not been confirmed across the team. Trial outputs are not controlled team results.",
+  "scope": "candidate"
+}
