@@ -72,8 +72,4 @@ bash scripts/bootstrap_gpu.sh
 
 真实输出默认不入 Git；核验后可将选定表格、配置、匿名化日志放入 `results/`。大型 trace 宜通过 GitHub Release 附件共享，保留 SHA256。不要上传凭据、课程邮件或额度码。
 
-## 学 vLLM 从哪里开始
-
-先看 [docs/vllm-learning.md](docs/vllm-learning.md)：从 Prefill/Decode、KV Cache、PagedAttention、Continuous Batching，逐步到 Automatic Prefix Caching 和 profiling。任务二让你学会把“感觉更快”变成可复现的测量。
-
 保留的任务一说明在 [docs/task1-framework.md](docs/task1-framework.md)，原协议在 [spec.md](spec.md)。原有框架、场景和作者贡献均保留；新增代码集中在 `task2/`、`scripts/`、`configs/` 和任务二文档中。IBM 内容来源与使用范围见 [THIRD_PARTY.md](THIRD_PARTY.md)。
